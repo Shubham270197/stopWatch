@@ -1,0 +1,7 @@
+export const content = {
+    GET_USER_DATA_INITIATE: 'GET_USER_DATA_INITIATE',
+    GET_USER_DATA_SUCCESS: 'GET_USER_DATA_SUCCESS',
+    GET_USER_DATA_FAILURE: 'GET_USER_DATA_FAILURE'
+}
+
+export default content
