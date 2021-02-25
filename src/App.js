@@ -103,7 +103,7 @@ function App() {
                 >
                 </Icon>
                 </IconWrap>
-                 {total}
+                <div style={{ width: '40px', textAlign: 'center'}}> {total}</div>
                  <IconWrap>
                 <Icon className="far fa-plus" 
                 onClick={() => {
