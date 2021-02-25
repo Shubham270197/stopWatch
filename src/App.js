@@ -1,11 +1,21 @@
 
-import React, {useState, useRef, useLayoutEffect} from 'react'
+import React, {useState, useRef, useLayoutEffect, useEffect} from 'react'
 // import { useDispatch, useSelector, cre } from 'react-redux'
 // import {getUserDataInitiate} from '../../../Redux/actions/content'
 import { createSelector } from 'reselect'
 import moment from 'moment'
 
-import './App.css';
+import {
+  MainContent,
+  MainHeader,
+  TimerData,
+  Container,
+  ButtonContainer,
+  Button,
+  IconContainer,
+  IconWrap,
+  Icon
+} from './style';
 
 function App() {
   const [timer, updateTimer] = useState(0)
@@ -14,11 +24,16 @@ function App() {
   const countRef = useRef(null)
 
   const timeConvert = (num) => {
-    var hours = Math.floor(num / 60);  
-    var minutes = num % 60;
-    return hours + ":" + minutes; 
+    let hours = Math.floor(num / 60);  
+    let minutes = num % 60;
+    
+    let hoursFormat = hours.toString().length
+    const finalHours = hoursFormat === 1 ? "0"+hours : hours
+    let minFormat = minutes.toString().length
+    const finalMinutes = minFormat === 1 ? "0"+minutes : minutes
+    return finalHours + ":" + finalMinutes; 
   }
-
+  
   useLayoutEffect(() => {
     if (start) {
         clearInterval(countRef.current)
@@ -31,6 +46,16 @@ function App() {
 
   }, [start, total])
 
+  useEffect(() => {
+    if(timer < 1 && total <= -1 ) {
+    console.log("timer = ", timer)
+    clearInterval(countRef.current)
+        updateTimer(0)
+        updateStart(false)
+        updateTotal(1)
+    }
+  }, [timer])
+
 
   const onReset = () => {
         clearInterval(countRef.current)
@@ -39,53 +64,60 @@ function App() {
         updateTotal(1)
   }
   return (
-    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-            <div style={{textAlign: 'center'}}>
-            <h3>Stopwatch</h3>
-            {timeConvert(timer)}
-            </div>
-          
-          <div className='stopwatch-card'>
-            <div style={{padding: '10px 10px 10px 10px'}}>
-              <button 
+    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <MainContent>
+        <MainHeader>
+          <h3>Stopwatch</h3>
+        </MainHeader>
+        <TimerData>
+        {timeConvert(timer)}
+        </TimerData>
+        <Container>
+          <div style={{padding: '10px 10px 10px 10px'}}>
+            <ButtonContainer>
+              <Button 
                 onClick={() => {
                   if(!start) {
                     updateStart(true)
                   } else {
-                    updateStart(false)
-                  }
-                  
+                      updateStart(false)
+                    }
                 }}
                 style={{ margin: '0 10px'}}
-            >
+              >
                 {start ? 'Pause' : 'Start'}
-            </button>
-              <button onClick={onReset}>Stop</button>
-              <div style={{marginTop: '10px'}}>
-                <button
+              </Button>
+            </ButtonContainer>
+          <ButtonContainer
+            customMargin
+          >
+            <Button onClick={onReset}>Stop</Button>
+          </ButtonContainer>
+            <IconContainer>
+              <IconWrap>
+                <Icon className="far fa-minus"
                     onClick={(e) => {
                         if(total > -10)
                         updateTotal(total - 1)
                     }}
-                    style={{ margin: '0 10px'}}
                 >
-                  minus
-                </button>
+                </Icon>
+                </IconWrap>
                  {total}
-                <button 
+                 <IconWrap>
+                <Icon className="far fa-plus" 
                 onClick={() => {
                     if(total < 10)
                     updateTotal(total + 1)
                    
                 }}
-                style={{margin: "0 0 0 10px"}}
                 >
-                    plus
-                </button>
-           
-              </div>
+                </Icon>
+                </IconWrap>
+              </IconContainer>
             </div>
-          </div>
+          </Container>
+          </MainContent>
         </div>
   );
 }
